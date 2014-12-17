@@ -14,6 +14,9 @@
 		D176535C1A406A06004C3CD5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D176535B1A406A06004C3CD5 /* Images.xcassets */; };
 		D176535F1A406A06004C3CD5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D176535D1A406A06004C3CD5 /* LaunchScreen.xib */; };
 		D176536B1A406A06004C3CD5 /* RotateAndZoomTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D176536A1A406A06004C3CD5 /* RotateAndZoomTests.m */; };
+		D17653761A407147004C3CD5 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653751A407147004C3CD5 /* UIView+Addition.m */; };
+		D17653821A416E46004C3CD5 /* HFImageEditorFrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = D176537E1A416E46004C3CD5 /* HFImageEditorFrameView.m */; };
+		D17653831A416E46004C3CD5 /* HFImageEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653811A416E46004C3CD5 /* HFImageEditorViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,13 @@
 		D17653641A406A06004C3CD5 /* RotateAndZoomTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RotateAndZoomTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D17653691A406A06004C3CD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D176536A1A406A06004C3CD5 /* RotateAndZoomTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RotateAndZoomTests.m; sourceTree = "<group>"; };
+		D17653741A407147004C3CD5 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
+		D17653751A407147004C3CD5 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
+		D176537D1A416E46004C3CD5 /* HFImageEditorFrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFImageEditorFrameView.h; sourceTree = "<group>"; };
+		D176537E1A416E46004C3CD5 /* HFImageEditorFrameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFImageEditorFrameView.m; sourceTree = "<group>"; };
+		D176537F1A416E46004C3CD5 /* HFImageEditorViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HFImageEditorViewController+Private.h"; sourceTree = "<group>"; };
+		D17653801A416E46004C3CD5 /* HFImageEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFImageEditorViewController.h; sourceTree = "<group>"; };
+		D17653811A416E46004C3CD5 /* HFImageEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFImageEditorViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,10 +91,13 @@
 		D176534D1A406A06004C3CD5 /* RotateAndZoom */ = {
 			isa = PBXGroup;
 			children = (
+				D176537C1A416E46004C3CD5 /* ios-image-editor */,
 				D17653521A406A06004C3CD5 /* AppDelegate.h */,
 				D17653531A406A06004C3CD5 /* AppDelegate.m */,
 				D17653551A406A06004C3CD5 /* ViewController.h */,
 				D17653561A406A06004C3CD5 /* ViewController.m */,
+				D17653741A407147004C3CD5 /* UIView+Addition.h */,
+				D17653751A407147004C3CD5 /* UIView+Addition.m */,
 				D17653581A406A06004C3CD5 /* Main.storyboard */,
 				D176535B1A406A06004C3CD5 /* Images.xcassets */,
 				D176535D1A406A06004C3CD5 /* LaunchScreen.xib */,
@@ -117,6 +130,18 @@
 				D17653691A406A06004C3CD5 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D176537C1A416E46004C3CD5 /* ios-image-editor */ = {
+			isa = PBXGroup;
+			children = (
+				D176537D1A416E46004C3CD5 /* HFImageEditorFrameView.h */,
+				D176537E1A416E46004C3CD5 /* HFImageEditorFrameView.m */,
+				D176537F1A416E46004C3CD5 /* HFImageEditorViewController+Private.h */,
+				D17653801A416E46004C3CD5 /* HFImageEditorViewController.h */,
+				D17653811A416E46004C3CD5 /* HFImageEditorViewController.m */,
+			);
+			path = "ios-image-editor";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,9 +244,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D17653761A407147004C3CD5 /* UIView+Addition.m in Sources */,
+				D17653831A416E46004C3CD5 /* HFImageEditorViewController.m in Sources */,
 				D17653571A406A06004C3CD5 /* ViewController.m in Sources */,
 				D17653541A406A06004C3CD5 /* AppDelegate.m in Sources */,
 				D17653511A406A06004C3CD5 /* main.m in Sources */,
+				D17653821A416E46004C3CD5 /* HFImageEditorFrameView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,9 +371,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tao LI (D623857R9Z)";
 				INFOPLIST_FILE = RotateAndZoom/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "e513d10e-78f9-4386-b285-4007510fb23c";
 			};
 			name = Debug;
 		};
@@ -356,6 +386,7 @@
 				INFOPLIST_FILE = RotateAndZoom/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "e513d10e-78f9-4386-b285-4007510fb23c";
 			};
 			name = Release;
 		};

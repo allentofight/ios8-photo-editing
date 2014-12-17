@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UIGestureRecognizerDelegate>
 
-
+@property(nonatomic,assign) CGFloat minimumScale;
+@property(nonatomic,assign) CGFloat maximumScale;
+@property(nonatomic, assign) CGRect initialImageFrame;
 @end
 
