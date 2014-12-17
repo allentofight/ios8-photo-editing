@@ -24,12 +24,13 @@ typedef struct {
 @property(nonatomic,assign) CGPoint rotationCenter;
 @property(nonatomic,assign) CGPoint scaleCenter;
 @property(nonatomic,assign) CGFloat scale;
-@property(nonatomic,assign) CGFloat minumumScale;
+@property(nonatomic,assign) CGFloat minumumValidScale;
 @end
 
 @implementation ViewController {
     
     __weak IBOutlet UIView *_cropView;
+    CGFloat _preRotation;
 }
 
 - (void)viewDidLoad {
@@ -40,35 +41,11 @@ typedef struct {
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.cropRect = _cropView.frame;
-    self.imageView.frame = _cropView.frame;
-
-
-    
-    CGPoint topLeft = _cropView.bounds.origin;
-    topLeft = [self.imageView convertPoint:topLeft fromView:_cropView];
-    
-    CGPoint topRight = _cropView.bounds.origin;
-    topRight.x += _cropView.bounds.size.width;
-    topRight = [self.imageView convertPoint:topRight fromView:_cropView];
-    
-    CGPoint bottomLeft = _cropView.bounds.origin;
-    bottomLeft.y += _cropView.bounds.size.height;
-    bottomLeft = [self.imageView convertPoint:bottomLeft fromView:_cropView];
-    
-    CGPoint bottomRight = _cropView.bounds.origin;
-    bottomRight.x += _cropView.bounds.size.width;
-    bottomRight.y += _cropView.bounds.size.height;
-    bottomRight = [self.imageView convertPoint:bottomRight fromView:_cropView];
-    
-//    NSLog(@"topLeft = %@", NSStringFromCGPoint(topLeft));
-//    NSLog(@"topRight = %@", NSStringFromCGPoint(topRight));
-//    NSLog(@"bottomLeft = %@", NSStringFromCGPoint(bottomLeft));
-//    NSLog(@"bottomRight = %@", NSStringFromCGPoint(bottomRight));
     
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     panRecognizer.cancelsTouchesInView = NO;
     panRecognizer.delegate = self;
-    [self.view addGestureRecognizer:panRecognizer];
+//    [self.view addGestureRecognizer:panRecognizer];
     
     UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     pinchRecognizer.cancelsTouchesInView = NO;
@@ -90,10 +67,10 @@ typedef struct {
     
     
     self.imageView.transform = CGAffineTransformIdentity;
-    self.imageView.size = CGSizeMake(220, 260);
-    self.imageView.center = CGPointMake(_cropView.centerX+5, _cropView.centerY+25);
+    self.imageView.size = CGSizeMake(240, 260);
+    self.imageView.center = CGPointMake(_cropView.centerX+5, _cropView.centerY-20);
     self.initialImageFrame = self.imageView.frame;
-    NSLog(@"scale = %f", self.imageView.transform.a);
+
 }
 
 - (IBAction)handlePan:(UIPanGestureRecognizer*)recognizer
@@ -113,6 +90,7 @@ typedef struct {
         if(recognizer.state == UIGestureRecognizerStateBegan){
             self.scaleCenter = self.touchCenter;
         }
+        
         CGFloat deltaX = self.scaleCenter.x-self.imageView.bounds.size.width/2.0;
         CGFloat deltaY = self.scaleCenter.y-self.imageView.bounds.size.height/2.0;
         
@@ -132,6 +110,7 @@ typedef struct {
 
 - (void)checkBoundsWithTransform:(CGAffineTransform)transform
 {
+    
     CGRect r1 = [self boundingBoxForRect:self.cropRect rotatedByRadians:[self imageRotation]];
     Rectangle r2 = [self applyTransform:transform toRect:self.initialImageFrame];
     
@@ -172,12 +151,14 @@ typedef struct {
             handle = NO;
             if(self.gestureCount == 0) {
                 CGFloat scale = [self boundedScale:self.scale];
+                NSLog(@"bounded scale = %f, origin scale = %f", scale, self.scale);
                 if(scale != self.scale) {
                     CGFloat deltaX = self.scaleCenter.x-self.imageView.bounds.size.width/2.0;
                     CGFloat deltaY = self.scaleCenter.y-self.imageView.bounds.size.height/2.0;
                     
                     CGAffineTransform transform =  CGAffineTransformTranslate(self.imageView.transform, deltaX, deltaY);
-                    transform = CGAffineTransformScale(transform, scale/self.scale , scale/self.scale);
+                    
+                    transform = CGAffineTransformScale(transform, scale/self.scale, scale/self.scale);
                     transform = CGAffineTransformTranslate(transform, -deltaX, -deltaY);
                     [self checkBoundsWithTransform:transform];
                     self.view.userInteractionEnabled = NO;
@@ -186,8 +167,8 @@ typedef struct {
                     } completion:^(BOOL finished) {
                         self.view.userInteractionEnabled = YES;
                         self.scale = scale;
-                        self.minimumScale = scale;
-                        NSLog(@"scale = %f",scale);
+                        self.minumumValidScale = scale;
+                        NSLog(@"scale = %f", self.imageView.transform.a);
                     }];
                     
                 } else {
@@ -212,17 +193,85 @@ typedef struct {
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 - (IBAction)valueChanged:(UISlider *)sender {
     
-    CGFloat originRadian = DEGREES_TO_RADIANS(sender.value);
-    CGFloat radian = fabsf(originRadian);
+    CGFloat originRadian = DEGREES_TO_RADIANS(sender.value-_preRotation);
+    _preRotation = sender.value;
+    
+    self.imageView.transform = CGAffineTransformRotate(self.imageView.transform, originRadian);
+    
+    
+    CGPoint topLeft = _cropView.bounds.origin;
+    topLeft = [self.imageView convertPoint:topLeft fromView:_cropView];
+    
+    if (topLeft.x < 0) {
+        CGFloat diagonal = fabsf(topLeft.x);
+        CGFloat radian = DEGREES_TO_RADIANS(sender.value);
+        CGFloat offsetX = -diagonal/cosf(radian);
+        self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
+    }
+
+    CGFloat width = self.scale*CGRectGetWidth(self.initialImageFrame);
+    CGFloat height = self.scale*CGRectGetHeight(self.initialImageFrame);
+    
+    CGPoint bottomRight = _cropView.bounds.origin;
+    bottomRight.x += _cropView.bounds.size.width;
+    bottomRight.y += _cropView.bounds.size.height;
+    bottomRight = [self.imageView convertPoint:bottomRight fromView:_cropView];
+    
+    if (bottomRight.x > width) {
+        CGFloat diagonal = fabsf(bottomRight.x)-width;
+        CGFloat radian = DEGREES_TO_RADIANS(sender.value);
+        CGFloat horizontalOffsetX = diagonal/cosf(radian);
+        self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, horizontalOffsetX/2, 0);
+        self.imageView.transform = CGAffineTransformScale(self.imageView.transform, bottomRight.x/width, bottomRight.x/width);
+//        self.scale = self.imageView.transform.a;
+    }
+    
+    //container topRight
+    
+    CGPoint topRight = _cropView.bounds.origin;
+    topRight.x += _cropView.bounds.size.width;
+    topRight = [self.imageView convertPoint:topRight fromView:_cropView];
+    
+    if (topRight.y < 0) {
+        CGFloat diagonal = fabsf(topLeft.x);
+        CGFloat radian = DEGREES_TO_RADIANS(sender.value);
+        CGFloat offsetX = fabsf(diagonal/cosf(radian));
+        CGFloat offsetY = -diagonal*cosf(radian);
+        
+        self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
+    }
+    
+    CGPoint bottomLeft = _cropView.bounds.origin;
+    bottomLeft.y += _cropView.bounds.size.height;
+    bottomLeft = [self.imageView convertPoint:bottomLeft fromView:_cropView];
+
+    if (bottomLeft.y > height) {
+        return;
+        CGFloat diagonal = bottomLeft.y-height;
+        CGFloat radian = DEGREES_TO_RADIANS(sender.value);
+        CGFloat horizontalOffsetX = diagonal*sinf(radian);
+        CGFloat horizontalOffsetY = diagonal*cosf(radian);
+        
+        if (bottomLeft.y-topRight.y < height) {
+            self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -horizontalOffsetX, horizontalOffsetY);
+            NSLog(@"translate...");
+        }else {
+            self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -horizontalOffsetX/2, 0);
+            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, bottomLeft.y/height, bottomLeft.y/height);
+            self.scale = self.imageView.transform.a;
+            NSLog(@"translate and rotate");
+        }
+    }
+
+    
     
 //    CGFloat width = _cropView.width*sinf(radian)+_cropView.height*cosf(radian);
 //    CGFloat height = _cropView.height*sinf(radian)+_cropView.width*cosf(radian);
     
     
-    self.imageView.transform = CGAffineTransformIdentity;
 //    self.imageView.size = CGSizeMake(width, height);
 //    self.imageView.center = _cropView.center;
-    self.imageView.transform = CGAffineTransformMakeRotation(originRadian);
+
 }
 
 #pragma mark - Util
