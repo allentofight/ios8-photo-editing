@@ -68,8 +68,8 @@ typedef struct {
 //    CGFloat height = _cropView.height*sinf(radian)+_cropView.width*cosf(radian);
     
     
-    self.imageView.size = CGSizeMake(280, 260);
-    self.imageView.center = CGPointMake(_cropView.centerX+15, _cropView.centerY+10);
+    self.imageView.size = CGSizeMake(250, 220);
+    self.imageView.center = CGPointMake(_cropView.centerX+10, _cropView.centerY+10);
     self.initialImageFrame = self.imageView.frame;
 
 }
@@ -204,14 +204,6 @@ typedef struct {
     return topLeft;
 }
 
-- (CGPoint)bottomRight {
-    CGPoint bottomRight = _cropView.bounds.origin;
-    bottomRight.x += _cropView.bounds.size.width;
-    bottomRight.y += _cropView.bounds.size.height;
-    bottomRight = [self.imageView convertPoint:bottomRight fromView:_cropView];
-    return bottomRight;
-}
-
 - (CGPoint)topRight{
     CGPoint topRight = _cropView.bounds.origin;
     topRight.x += _cropView.bounds.size.width;
@@ -226,9 +218,18 @@ typedef struct {
     return bottomLeft;
 }
 
+- (CGPoint)bottomRight {
+    CGPoint bottomRight = _cropView.bounds.origin;
+    bottomRight.x += _cropView.bounds.size.width;
+    bottomRight.y += _cropView.bounds.size.height;
+    bottomRight = [self.imageView convertPoint:bottomRight fromView:_cropView];
+    return bottomRight;
+}
+
+
+
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 - (IBAction)valueChanged:(UISlider *)sender {
-    NSLog(@"sender = %f", sender.value);
     CGFloat originRadian = DEGREES_TO_RADIANS(sender.value-_preRotation);
     _preRotation = sender.value;
     
@@ -240,6 +241,7 @@ typedef struct {
         CGFloat diagonal = fabsf(topLeft.x);
         CGFloat radian = DEGREES_TO_RADIANS(sender.value);
         CGFloat offsetX = -diagonal/cosf(radian);
+//        CGFloat offsetY = -diagonal/sinf(radian);
         self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
     }
 
@@ -249,28 +251,24 @@ typedef struct {
     if (topRight.y < 0) {
         CGFloat diagonal = fabsf(topRight.y);
         CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-        CGFloat offsetX = fabsf(diagonal/cosf(radian));
-        CGFloat offsetY = -diagonal/sinf(radian);
-        self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
+        CGFloat offsetY = -diagonal/cosf(radian);
+        self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
     }
-    
     
     CGFloat scale = self.scale;
     CGFloat width = scale*CGRectGetWidth(self.initialImageFrame);
     CGFloat height = scale*CGRectGetHeight(self.initialImageFrame);
-
-    NSLog(@"scale = %f", scale);
     
     
     CGPoint bottomRight = self.bottomRight;
     
     if (bottomRight.x > width) {
-        CGFloat diagonal = bottomRight.x-topLeft.x-width;
+        CGFloat diagonal = bottomRight.x-self.topLeft.x-width;
         CGFloat radian = DEGREES_TO_RADIANS(sender.value);
         CGFloat horizontalOffsetX = diagonal/cosf(radian);
         CGFloat horizontalOffsetY = diagonal/sinf(radian);
         
-        if (bottomRight.x-topLeft.x > width) {
+        if (bottomRight.x-self.topLeft.x > width) {
             
             self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a, 1/self.imageView.transform.a);
             NSLog(@"scale = %f", self.imageView.transform.a);
@@ -293,29 +291,32 @@ typedef struct {
 
     }
 
-    return;
+//    return;
     //bottomLeft
-
-    CGPoint bottomLeft = self.bottomLeft;
-
-    if (bottomLeft.y > height) {
+//    height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
+    if (self.bottomLeft.y > height) {
         
-
-        if (bottomLeft.y-topRight.y > height) {
-            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a, 1/self.imageView.transform.a);
-            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, (self.bottomLeft.y-self.topRight.y)/height, (self.bottomLeft.y-self.topRight.y)/height);
-            
+        if (self.bottomLeft.y-self.topRight.y > height) {
+            CGFloat scale = (self.bottomLeft.y-self.topRight.y)/CGRectGetHeight(self.initialImageFrame);
+            NSLog(@"current height = %f, scale = %f", self.bottomLeft.y-self.topRight.y, scale);
+            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a*scale, 1/self.imageView.transform.a*scale);
+//            NSLog(@"after height = %f", self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame));
+//            height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
             if (self.bottomLeft.y > height) {
-                CGFloat diagonal = fabsf(self.topLeft.x);
+                CGFloat diagonal = fabsf(self.bottomLeft.y-height);
                 CGFloat radian = DEGREES_TO_RADIANS(sender.value);
                 CGFloat offsetX = -diagonal/sinf(radian);
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
+                CGFloat offsetY = diagonal/cosf(radian);
+                NSLog(@"diagonal = %f, offsetX = %f, offsetY = %f", diagonal,offsetX, offsetY);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -offsetX, offsetY);
             }
+            height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
+            NSLog(@"finish still outside = %d, self.bottomLeft.y = %f", self.bottomLeft.y > height, self.bottomLeft.y);
         }
         else {
             CGFloat height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
             NSLog(@"scale = %f", self.imageView.transform.a);
-            CGFloat diagonal = fabsf(self.bottomLeft.y-self.topRight.y-height);
+            CGFloat diagonal = fabsf(self.bottomLeft.y-height);
             CGFloat radian = DEGREES_TO_RADIANS(sender.value);
             CGFloat offsetX = -diagonal/sinf(radian);
             CGFloat offsetY = diagonal/cosf(radian);
