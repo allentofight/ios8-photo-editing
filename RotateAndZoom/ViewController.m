@@ -256,6 +256,7 @@ typedef struct {
     }
     
     CGFloat scale = self.scale;
+    scale = self.imageView.transform.a;
     CGFloat width = scale*CGRectGetWidth(self.initialImageFrame);
     CGFloat height = scale*CGRectGetHeight(self.initialImageFrame);
     
@@ -270,8 +271,8 @@ typedef struct {
         
         if (bottomRight.x-self.topLeft.x > width) {
             
+            width = CGRectGetWidth(self.initialImageFrame);
             self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a, 1/self.imageView.transform.a);
-            NSLog(@"scale = %f", self.imageView.transform.a);
             self.imageView.transform = CGAffineTransformScale(self.imageView.transform, (self.bottomRight.x-self.topLeft.x)/width, (self.bottomRight.x-self.topLeft.x)/width);
             
             if (self.topLeft.x < 0) {
@@ -291,7 +292,7 @@ typedef struct {
 
     }
 
-//    return;
+    return;
     //bottomLeft
 //    height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
     if (self.bottomLeft.y > height) {
@@ -300,17 +301,15 @@ typedef struct {
             CGFloat scale = (self.bottomLeft.y-self.topRight.y)/CGRectGetHeight(self.initialImageFrame);
             NSLog(@"current height = %f, scale = %f", self.bottomLeft.y-self.topRight.y, scale);
             self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a*scale, 1/self.imageView.transform.a*scale);
-//            NSLog(@"after height = %f", self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame));
-//            height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
+            height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
             if (self.bottomLeft.y > height) {
                 CGFloat diagonal = fabsf(self.bottomLeft.y-height);
                 CGFloat radian = DEGREES_TO_RADIANS(sender.value);
                 CGFloat offsetX = -diagonal/sinf(radian);
                 CGFloat offsetY = diagonal/cosf(radian);
                 NSLog(@"diagonal = %f, offsetX = %f, offsetY = %f", diagonal,offsetX, offsetY);
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -offsetX, offsetY);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
             }
-            height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
             NSLog(@"finish still outside = %d, self.bottomLeft.y = %f", self.bottomLeft.y > height, self.bottomLeft.y);
         }
         else {

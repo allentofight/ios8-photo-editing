@@ -375,7 +375,7 @@
 				INFOPLIST_FILE = RotateAndZoom/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e513d10e-78f9-4386-b285-4007510fb23c";
+				PROVISIONING_PROFILE = "96f72b54-bcf9-4256-a8e4-251666b7acc6";
 			};
 			name = Debug;
 		};
@@ -386,7 +386,7 @@
 				INFOPLIST_FILE = RotateAndZoom/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e513d10e-78f9-4386-b285-4007510fb23c";
+				PROVISIONING_PROFILE = "96f72b54-bcf9-4256-a8e4-251666b7acc6";
 			};
 			name = Release;
 		};
@@ -443,6 +443,7 @@
 				D17653701A406A06004C3CD5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D17653711A406A06004C3CD5 /* Build configuration list for PBXNativeTarget "RotateAndZoomTests" */ = {
 			isa = XCConfigurationList;
@@ -451,6 +452,7 @@
 				D17653731A406A06004C3CD5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
