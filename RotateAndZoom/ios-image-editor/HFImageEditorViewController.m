@@ -421,12 +421,8 @@ static const NSTimeInterval kAnimationIntervalTransform = 0.2;
 }
 
 
-- (void)checkBoundsWithTransform:(CGAffineTransform)transform
+- (BOOL)checkBoundsWithTransform:(CGAffineTransform)transform
 {
-    if(!self.checkBounds) {
-        self.validTransform = transform;
-        return;
-    }
     CGRect r1 = [self boundingBoxForRect:self.cropRect rotatedByRadians:[self imageRotation]];
     Rectangle r2 = [self applyTransform:transform toRect:self.initialImageFrame];
     
@@ -438,9 +434,11 @@ static const NSTimeInterval kAnimationIntervalTransform = 0.2;
     
     if(CGRectContainsRect([self CGRectFromRectangle:r3],r1)) {
         self.validTransform = transform;
-    }else{
-        
+        return YES;
     }
+    
+    
+    return NO;
 }
 
 
@@ -496,7 +494,6 @@ static const NSTimeInterval kAnimationIntervalTransform = 0.2;
     transform = CGAffineTransformTranslate(transform, -deltaX, -deltaY);
     self.imageView.transform = transform;
     
-    
     NSLog(@"frame = %@", NSStringFromCGRect(self.imageView.frame));
 
     [self checkBoundsWithTransform:transform];
@@ -517,12 +514,19 @@ static const NSTimeInterval kAnimationIntervalTransform = 0.2;
         CGAffineTransform transform =  CGAffineTransformTranslate(self.imageView.transform, deltaX, deltaY);
         transform = CGAffineTransformScale(transform, recognizer.scale, recognizer.scale);
         transform = CGAffineTransformTranslate(transform, -deltaX, -deltaY);
-        self.scale *= recognizer.scale;
+        CGFloat recognizerScale = recognizer.scale;
+
         self.imageView.transform = transform;
 
         recognizer.scale = 1;
         
-        [self checkBoundsWithTransform:transform];
+        BOOL isValidTransform = [self checkBoundsWithTransform:transform];
+        if (isValidTransform) {
+            self.scale *= recognizerScale;
+            NSLog(@"isValid....");
+        }
+        
+        NSLog(@"scale = %f", self.scale);
     }
 }
 

@@ -32,6 +32,11 @@ typedef struct {
     __weak IBOutlet UIView *_cropView;
     
     __weak IBOutlet UISlider *_slider;
+    
+    __weak IBOutlet UIView *_gestureView;
+    
+//    CGFloat _userScale;         //用户产生的缩放因子
+    
     CGFloat _preRotation;
 }
 
@@ -46,13 +51,15 @@ typedef struct {
     
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     panRecognizer.cancelsTouchesInView = NO;
+    [panRecognizer setMinimumNumberOfTouches:1];
+    [panRecognizer setMaximumNumberOfTouches:1];
     panRecognizer.delegate = self;
-//    [self.view addGestureRecognizer:panRecognizer];
+    [_gestureView addGestureRecognizer:panRecognizer];
     
     UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     pinchRecognizer.cancelsTouchesInView = NO;
     pinchRecognizer.delegate = self;
-    [self.view addGestureRecognizer:pinchRecognizer];
+    [_gestureView addGestureRecognizer:pinchRecognizer];
     
     [self commonInit];
 }
@@ -60,7 +67,7 @@ typedef struct {
 - (void)commonInit{
     
     self.scale = 1;
-    self.minimumScale = 0.5;
+    self.minimumScale = 1;
     self.maximumScale = 5;
     
 //    CGFloat radian = M_PI_4;
@@ -68,8 +75,9 @@ typedef struct {
 //    CGFloat height = _cropView.height*sinf(radian)+_cropView.width*cosf(radian);
     
     
-    self.imageView.size = CGSizeMake(250, 220);
-    self.imageView.center = CGPointMake(_cropView.centerX+10, _cropView.centerY+10);
+    self.imageView.size = _cropRect.size;
+    self.imageView.height += 20;
+    self.imageView.center = _cropView.center;
     self.initialImageFrame = self.imageView.frame;
 
 }
@@ -77,6 +85,7 @@ typedef struct {
 - (IBAction)reset:(id)sender {
     _slider.value = 0;
     _preRotation = 0;
+    self.scale = 1.0;
     self.imageView.transform = CGAffineTransformIdentity;
     self.imageView.frame = self.initialImageFrame;
 }
@@ -85,11 +94,11 @@ typedef struct {
 - (IBAction)handlePan:(UIPanGestureRecognizer*)recognizer
 {
     if([self handleGestureState:recognizer.state]) {
-        CGPoint translation = [recognizer translationInView:self.imageView];
+        CGPoint translation = [recognizer translationInView:_gestureView];
         CGAffineTransform transform = CGAffineTransformTranslate( self.imageView.transform, translation.x, translation.y);
         self.imageView.transform = transform;
         [self checkBoundsWithTransform:transform];
-        [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
+        [recognizer setTranslation:CGPointMake(0, 0) inView:_gestureView];
     }
 }
 
@@ -106,9 +115,13 @@ typedef struct {
         CGAffineTransform transform =  CGAffineTransformTranslate(self.imageView.transform, deltaX, deltaY);
         transform = CGAffineTransformScale(transform, recognizer.scale, recognizer.scale);
         transform = CGAffineTransformTranslate(transform, -deltaX, -deltaY);
-        self.scale *= recognizer.scale;
+//        self.scale *= recognizer.scale;
         self.imageView.transform = transform;
         
+        
+        self.scale = sqrt(transform.a * transform.a + transform.c * transform.c);
+        
+        NSLog(@"self.scale = %f", self.scale);
         recognizer.scale = 1;
         
         [self checkBoundsWithTransform:transform];
@@ -117,7 +130,7 @@ typedef struct {
 
 
 
-- (void)checkBoundsWithTransform:(CGAffineTransform)transform
+- (BOOL)checkBoundsWithTransform:(CGAffineTransform)transform
 {
     
     CGRect r1 = [self boundingBoxForRect:self.cropRect rotatedByRadians:[self imageRotation]];
@@ -131,8 +144,11 @@ typedef struct {
     
     if(CGRectContainsRect([self CGRectFromRectangle:r3],r1)) {
         self.validTransform = transform;
+        NSLog(@"valid...");
+        return YES;
     }else{
-        
+        return NO;
+        NSLog(@"invalid...");
     }
 }
 
@@ -149,6 +165,7 @@ typedef struct {
 
 - (BOOL)handleGestureState:(UIGestureRecognizerState)state
 {
+    NSLog(@"ended....");
     BOOL handle = YES;
     switch (state) {
         case UIGestureRecognizerStateBegan:
@@ -226,14 +243,25 @@ typedef struct {
     return bottomRight;
 }
 
-
-
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 - (IBAction)valueChanged:(UISlider *)sender {
     CGFloat originRadian = DEGREES_TO_RADIANS(sender.value-_preRotation);
     _preRotation = sender.value;
-    
+
     self.imageView.transform = CGAffineTransformRotate(self.imageView.transform, originRadian);
+    CGFloat radian = DEGREES_TO_RADIANS(sender.value);
+    
+    CGFloat minWidth = CGRectGetWidth(self.initialImageFrame)*sinf(radian)+CGRectGetWidth(self.initialImageFrame)*cosf(radian);
+    
+    CGAffineTransform t = _imageView.transform;
+    CGFloat scale = sqrt(t.a * t.a + t.c * t.c);
+    
+    CGFloat xScale = minWidth/CGRectGetWidth(self.initialImageFrame);
+    
+    xScale = MAX(xScale, self.scale);
+
+    _imageView.transform = CGAffineTransformScale(_imageView.transform, 1/scale*xScale, 1/scale*xScale);
+    self.validTransform = _imageView.transform;
     
     
     CGPoint topLeft = self.topLeft;
@@ -250,87 +278,12 @@ typedef struct {
     
     if (topRight.y < 0) {
         CGFloat diagonal = fabsf(topRight.y);
-        CGFloat radian = DEGREES_TO_RADIANS(sender.value);
+
         CGFloat offsetY = -diagonal/cosf(radian);
         self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
     }
     
-    CGFloat scale = self.scale;
-    scale = self.imageView.transform.a;
-    CGFloat width = scale*CGRectGetWidth(self.initialImageFrame);
-    CGFloat height = scale*CGRectGetHeight(self.initialImageFrame);
     
-    
-    CGPoint bottomRight = self.bottomRight;
-    
-    if (bottomRight.x > width) {
-        CGFloat diagonal = bottomRight.x-self.topLeft.x-width;
-        CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-        CGFloat horizontalOffsetX = diagonal/cosf(radian);
-        CGFloat horizontalOffsetY = diagonal/sinf(radian);
-        
-        if (bottomRight.x-self.topLeft.x > width) {
-            
-            width = CGRectGetWidth(self.initialImageFrame);
-            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a, 1/self.imageView.transform.a);
-            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, (self.bottomRight.x-self.topLeft.x)/width, (self.bottomRight.x-self.topLeft.x)/width);
-            
-            if (self.topLeft.x < 0) {
-                CGFloat diagonal = fabsf(self.topLeft.x);
-                CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-                CGFloat offsetX = -diagonal/cosf(radian);
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
-            }else {
-                CGFloat diagonal = fabsf(self.topLeft.x);
-                CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-                CGFloat offsetX = -diagonal/cosf(radian);
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -offsetX, 0);
-            }
-        }else{
-            self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, horizontalOffsetX, horizontalOffsetY);
-        }
-
-    }
-
-    return;
-    //bottomLeft
-//    height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
-    if (self.bottomLeft.y > height) {
-        
-        if (self.bottomLeft.y-self.topRight.y > height) {
-            CGFloat scale = (self.bottomLeft.y-self.topRight.y)/CGRectGetHeight(self.initialImageFrame);
-            NSLog(@"current height = %f, scale = %f", self.bottomLeft.y-self.topRight.y, scale);
-            self.imageView.transform = CGAffineTransformScale(self.imageView.transform, 1/self.imageView.transform.a*scale, 1/self.imageView.transform.a*scale);
-            height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
-            if (self.bottomLeft.y > height) {
-                CGFloat diagonal = fabsf(self.bottomLeft.y-height);
-                CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-                CGFloat offsetX = -diagonal/sinf(radian);
-                CGFloat offsetY = diagonal/cosf(radian);
-                NSLog(@"diagonal = %f, offsetX = %f, offsetY = %f", diagonal,offsetX, offsetY);
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
-            }
-            NSLog(@"finish still outside = %d, self.bottomLeft.y = %f", self.bottomLeft.y > height, self.bottomLeft.y);
-        }
-        else {
-            CGFloat height = self.imageView.transform.a*CGRectGetHeight(self.initialImageFrame);
-            NSLog(@"scale = %f", self.imageView.transform.a);
-            CGFloat diagonal = fabsf(self.bottomLeft.y-height);
-            CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-            CGFloat offsetX = -diagonal/sinf(radian);
-            CGFloat offsetY = diagonal/cosf(radian);
-            self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -offsetX, offsetY);
-        }
-    }
-
-    
-    
-//    CGFloat width = _cropView.width*sinf(radian)+_cropView.height*cosf(radian);
-//    CGFloat height = _cropView.height*sinf(radian)+_cropView.width*cosf(radian);
-    
-    
-//    self.imageView.size = CGSizeMake(width, height);
-//    self.imageView.center = _cropView.center;
 
 }
 
