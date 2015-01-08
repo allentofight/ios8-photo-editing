@@ -35,6 +35,7 @@ typedef struct {
     
     __weak IBOutlet UIView *_gestureView;
     
+    __weak IBOutlet UILabel *_rotationLbl;
 //    CGFloat _userScale;         //用户产生的缩放因子
     
     CGFloat _preRotation;
@@ -83,6 +84,7 @@ typedef struct {
     self.imageView.center = _cropView.center;
     self.initialImageFrame = self.imageView.frame;
 
+    self.validTransform = _imageView.transform;
 }
 
 - (IBAction)reset:(id)sender {
@@ -97,7 +99,7 @@ typedef struct {
 - (IBAction)handlePan:(UIPanGestureRecognizer*)recognizer
 {
     if([self handleGestureState:recognizer.state]) {
-        CGPoint translation = [recognizer translationInView:_gestureView];
+        CGPoint translation = [recognizer translationInView:_imageView];
         CGAffineTransform transform = CGAffineTransformTranslate( self.imageView.transform, translation.x, translation.y);
         self.imageView.transform = transform;
         [self checkBoundsWithTransform:transform];
@@ -155,6 +157,7 @@ typedef struct {
         return YES;
     }else{
 //        NSLog(@"r3 = %@, r1 = %@", NSStringFromCGRect([self CGRectFromRectangle:r3]), NSStringFromCGRect(r1));
+        NSLog(@"invalid...");
         return NO;
     }
 }
@@ -172,7 +175,7 @@ typedef struct {
 
 - (BOOL)handleGestureState:(UIGestureRecognizerState)state
 {
-    NSLog(@"ended....");
+    NSLog(@"handleGestureState....");
     BOOL handle = YES;
     switch (state) {
         case UIGestureRecognizerStateBegan:
@@ -184,7 +187,6 @@ typedef struct {
             handle = NO;
             if(self.gestureCount == 0) {
                 CGFloat scale = [self boundedScale:self.scale];
-                NSLog(@"bounded scale = %f, origin scale = %f", scale, self.scale);
                 if(scale != self.scale) {
                     CGFloat deltaX = self.scaleCenter.x-self.imageView.bounds.size.width/2.0;
                     CGFloat deltaY = self.scaleCenter.y-self.imageView.bounds.size.height/2.0;
@@ -212,7 +214,6 @@ typedef struct {
                         self.view.userInteractionEnabled = YES;
                     }];
                     
-                    self.imageView.transform = self.validTransform;
                 }
             }
         } break;
@@ -222,131 +223,182 @@ typedef struct {
     return handle;
 }
 
-- (CGPoint)topLeft {
-    CGPoint topLeft = _cropView.bounds.origin;
-    topLeft = [self.imageView convertPoint:topLeft fromView:_cropView];
-    return topLeft;
-}
-
-- (CGPoint)topRight{
-    CGPoint topRight = _cropView.bounds.origin;
-    topRight.x += _cropView.bounds.size.width;
-    topRight = [self.imageView convertPoint:topRight fromView:_cropView];
-    return topRight;
-}
-
-- (CGPoint)bottomLeft{
-    CGPoint bottomLeft = _cropView.bounds.origin;
-    bottomLeft.y += _cropView.bounds.size.height;
-    bottomLeft = [self.imageView convertPoint:bottomLeft fromView:_cropView];
-    return bottomLeft;
-}
-
-- (CGPoint)bottomRight {
-    NSLog(@"bottomRight...");
-    CGPoint bottomRight = _cropView.bounds.origin;
-    bottomRight.x += _cropView.bounds.size.width;
-    bottomRight.y += _cropView.bounds.size.height;
-    
-    
-    bottomRight = [self.imageView convertPoint:bottomRight fromView:_cropView];
-    return [_cropView convertPoint:bottomRight toView:self.imageView];
-
-}
-
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 - (IBAction)valueChanged:(UISlider *)sender {
+    if (sender < 0) {
+        sender.value = 0;
+    }
+    _rotationLbl.text = [NSString stringWithFormat:@"%f", sender.value];
+    
     CGFloat originRadian = DEGREES_TO_RADIANS(sender.value-_preRotation);
     _preRotation = sender.value;
+    
+    NSLog(@"sender.value = %f", sender.value);
 
     self.imageView.transform = CGAffineTransformRotate(self.imageView.transform, originRadian);
     CGFloat radian = fabsf(DEGREES_TO_RADIANS(sender.value));
+    if (!radian) {
+        radian = 0.1;
+    }
+    
+    if (sender.value < 0) {
+        NSLog(@"");
+    }
     
     CGFloat minWidth = CGRectGetWidth(self.initialImageFrame)*sinf(radian)+CGRectGetWidth(self.initialImageFrame)*cosf(radian);
     
+    if (!sender.value) {
+        minWidth = CGRectGetWidth(self.initialImageFrame);
+    }
+    
     CGAffineTransform t = _imageView.transform;
     CGFloat scale = sqrt(t.a * t.a + t.c * t.c);
-    
     CGFloat xScale = minWidth/CGRectGetWidth(self.initialImageFrame);
     
+    
     xScale = MAX(xScale, self.scale);
+    
+    
 
     _imageView.transform = CGAffineTransformScale(_imageView.transform, 1/scale*xScale, 1/scale*xScale);
     self.validTransform = _imageView.transform;
 
+//    NSLog(@"xscale = %f, minWidth = %f,rotation = %f", xScale, minWidth, sender.value);
     BOOL isWithin = [self checkBoundsWithTransform:_imageView.transform];
-    if (!isWithin) {
-        CGFloat cropTopLeftX = CGRectGetMinX(_rotatedCropRect);
-        CGFloat imageViewLeft = CGRectGetMinX(_rotatedImageViewRect);
-        
-        if (cropTopLeftX < imageViewLeft) {
-            CGFloat diagonal = fabsf(imageViewLeft-cropTopLeftX);
-            CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-            CGFloat offsetX = -diagonal/cosf(radian);
-            self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
-        }
-        
-        CGFloat cropTopRightY = CGRectGetMinY(_rotatedCropRect);
-        CGFloat imageViewTopRightY = CGRectGetMinY(_rotatedImageViewRect);
-        
-        if (cropTopRightY < imageViewTopRightY) {
-            CGFloat diagonal = fabsf(imageViewTopRightY-cropTopRightY);
-            CGFloat offsetY = -diagonal/cosf(radian);
-            self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
-        }
-        
-        CGFloat cropBottomRightX = CGRectGetMaxX(_rotatedCropRect);
-        CGFloat imageViewBottomRightX = CGRectGetMaxX(_rotatedImageViewRect);
-        
-
-        
-        [self checkBoundsWithTransform:_imageView.transform];
-        cropBottomRightX = CGRectGetMaxX(_rotatedCropRect);
-        imageViewBottomRightX = CGRectGetMaxX(_rotatedImageViewRect);
-        
-        if (cropBottomRightX > imageViewBottomRightX) {
-            
+    if (isWithin) return;
+    
+    
+    //TopLeft
+    if (sender.value > 0) {
+        {
+            //TopLeft
             CGFloat cropTopLeftX = CGRectGetMinX(_rotatedCropRect);
-            CGFloat imageViewLeft = CGRectGetMinX(_rotatedImageViewRect);
-            CGFloat diagonal = cropBottomRightX-imageViewBottomRightX;
-            CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-            CGFloat horizontalOffsetX = diagonal/cosf(radian);
-            CGFloat horizontalOffsetY = diagonal/sinf(radian);
-            if (fabs(cropBottomRightX-imageViewBottomRightX) < fabs(cropTopLeftX-imageViewLeft)) {
+            CGFloat imageViewLeftX = CGRectGetMinX(_rotatedImageViewRect);
+            if (cropTopLeftX < imageViewLeftX) {
+//                NSLog(@"rotation > 0 TopLeft outOfBounds");
+                CGFloat diagonal = fabsf(imageViewLeftX-cropTopLeftX);
+                CGFloat offsetX = -diagonal/cosf(radian);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
+            }
+        }
+        
+        {
+            //TopRight
+            [self checkBoundsWithTransform:_imageView.transform];
+            CGFloat cropTopRightY = CGRectGetMinY(_rotatedCropRect);
+            CGFloat imageViewTopRightY = CGRectGetMinY(_rotatedImageViewRect);
+            
+            if (cropTopRightY < imageViewTopRightY) {
+                CGFloat diagonal = fabsf(imageViewTopRightY-cropTopRightY);
+                CGFloat offsetY = -diagonal/cosf(radian);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
+                NSLog(@"rotation > 0 topRight outOfBounds offsetY = %f", offsetY);
+            }
+        }
+        
+        {
+            //BottomRight
+            [self checkBoundsWithTransform:_imageView.transform];
+            CGFloat cropBottomRightX = CGRectGetMaxX(_rotatedCropRect);
+            CGFloat imageViewBottomRightX = CGRectGetMaxX(_rotatedImageViewRect);
+            if (cropBottomRightX > imageViewBottomRightX) {
+                CGFloat diagonal = cropBottomRightX-imageViewBottomRightX;
+                CGFloat horizontalOffsetX = diagonal/cosf(radian);
                 self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, horizontalOffsetX, 0);
-            }else{
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, horizontalOffsetX, horizontalOffsetY);
+            }
+        }
+        
+        {
+            //BottomLeft
+            [self checkBoundsWithTransform:_imageView.transform];
+            CGFloat cropBottomLeftY = CGRectGetMaxY(_rotatedCropRect);
+            CGFloat imageViewBottomLeftY = CGRectGetMaxY(_rotatedImageViewRect);
+            
+            if (cropBottomLeftY > imageViewBottomLeftY) {
+
+                CGFloat cropTopLeftY = CGRectGetMinY(_rotatedCropRect);
+                CGFloat imageViewLeftY = CGRectGetMinY(_rotatedImageViewRect);
+                CGFloat diagonal = fabsf(cropBottomLeftY-imageViewBottomLeftY);
+                CGFloat offsetX = -diagonal/sinf(radian);
+                CGFloat offsetY = diagonal/cosf(radian);
+                if (cropBottomLeftY-imageViewBottomLeftY < cropTopLeftY-imageViewLeftY) {
+                    self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
+                }else{
+                    NSLog(@"rotation > 0 BottomLeft outOfBounds, offsetY = %f", offsetY);
+                    self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
+                }
             }
 
         }
         
-
-        [self checkBoundsWithTransform:_imageView.transform];
+    }else{
+        {
+            //TopRight
+            CGFloat cropTopRightX = CGRectGetMaxX(_rotatedCropRect);
+            CGFloat imageViewTopRightX = CGRectGetMaxX(_rotatedImageViewRect);
+            
+            if (cropTopRightX > imageViewTopRightX) {
+//                NSLog(@"topRight outOfBounds...");
+                CGFloat diagonal = cropTopRightX-imageViewTopRightX;
+                CGFloat offsetX = diagonal/cosf(radian);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, 0);
+            }
+        }
         
-        CGFloat cropBottomLeftY = CGRectGetMaxY(_rotatedCropRect);
-        CGFloat imageViewBottomLeftY = CGRectGetMaxY(_rotatedImageViewRect);
         
-        if (cropBottomLeftY > imageViewBottomLeftY) {
-
+        {
+            //TopLeft
+            [self checkBoundsWithTransform:_imageView.transform];
             CGFloat cropTopLeftY = CGRectGetMinY(_rotatedCropRect);
             CGFloat imageViewLeftY = CGRectGetMinY(_rotatedImageViewRect);
-            CGFloat diagonal = fabsf(cropBottomLeftY-imageViewBottomLeftY);
-            CGFloat radian = DEGREES_TO_RADIANS(sender.value);
-            CGFloat offsetX = -diagonal/sinf(radian);
-            CGFloat offsetY = diagonal/cosf(radian);
-            NSLog(@"offsetY = %f", offsetY);
-            if (cropBottomLeftY-imageViewBottomLeftY < cropTopLeftY-imageViewLeftY) {
-                NSLog(@"onlyY...");
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
-            }else{
-                NSLog(@"x,y....");
-                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
-            }
-            
+            if (cropTopLeftY < imageViewLeftY) {
 
+                CGFloat diagonal = fabsf(imageViewLeftY-cropTopLeftY);
+                CGFloat offsetY = -diagonal/cosf(radian);
+                NSLog(@"TopLeft OutOfBounds... offsetY = %f", offsetY);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
+            }
+        }
+        
+        {
+            //BottomLeft
+            [self checkBoundsWithTransform:_imageView.transform];
+            CGFloat cropBottomLeftX = CGRectGetMinX(_rotatedCropRect);
+            CGFloat imageViewBottomLeftX = CGRectGetMinX(_rotatedImageViewRect);
+            if (cropBottomLeftX < imageViewBottomLeftX) {
+//                NSLog(@"BottomLeft OutOfBounds...");
+                CGFloat diagonal = imageViewBottomLeftX-cropBottomLeftX;
+                CGFloat horizontalOffsetX = diagonal/cosf(radian);
+                self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, -horizontalOffsetX, 0);
+            }
+        }
+        
+        {
+            //BottomRight
+            [self checkBoundsWithTransform:_imageView.transform];
+            CGFloat cropBottomRightY = CGRectGetMaxY(_rotatedCropRect);
+            CGFloat imageViewBottomRightY = CGRectGetMaxY(_rotatedImageViewRect);
+            
+            if (cropBottomRightY > imageViewBottomRightY) {
+
+                CGFloat cropTopLeftY = CGRectGetMinY(_rotatedCropRect);
+                CGFloat imageViewLeftY = CGRectGetMinY(_rotatedImageViewRect);
+                CGFloat diagonal = fabsf(cropBottomRightY-imageViewBottomRightY);
+                CGFloat offsetX = diagonal/sinf(radian);
+                CGFloat offsetY = diagonal/cosf(radian);
+                NSLog(@"BOttomLeft OutOfBounds... offsetY = %f", offsetY);
+                if (cropBottomRightY-imageViewBottomRightY < cropTopLeftY-imageViewLeftY) {
+                    self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, 0, offsetY);
+                }else{
+                    self.imageView.transform = CGAffineTransformTranslate(self.imageView.transform, offsetX, offsetY);
+                }
+            }
 
         }
+
     }
+    
+
 }
 
 #pragma mark - Util
