@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:RotateAndZoom.xcodeproj">
+      location = "self:ios8-photo-editing.xcodeproj">
    </FileRef>
 </Workspace>

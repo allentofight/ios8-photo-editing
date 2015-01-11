@@ -15,23 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D176534A1A406A06004C3CD5"
-               BuildableName = "RotateAndZoom.app"
-               BlueprintName = "RotateAndZoom"
-               ReferencedContainer = "container:RotateAndZoom.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D17653631A406A06004C3CD5"
-               BuildableName = "RotateAndZoomTests.xctest"
-               BlueprintName = "RotateAndZoomTests"
-               ReferencedContainer = "container:RotateAndZoom.xcodeproj">
+               BuildableName = "ios8-photo-editing.app"
+               BlueprintName = "ios8-photo-editing"
+               ReferencedContainer = "container:ios8-photo-editing.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,24 +28,14 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D17653631A406A06004C3CD5"
-               BuildableName = "RotateAndZoomTests.xctest"
-               BlueprintName = "RotateAndZoomTests"
-               ReferencedContainer = "container:RotateAndZoom.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D176534A1A406A06004C3CD5"
-            BuildableName = "RotateAndZoom.app"
-            BlueprintName = "RotateAndZoom"
-            ReferencedContainer = "container:RotateAndZoom.xcodeproj">
+            BuildableName = "ios8-photo-editing.app"
+            BlueprintName = "ios8-photo-editing"
+            ReferencedContainer = "container:ios8-photo-editing.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -76,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D176534A1A406A06004C3CD5"
-            BuildableName = "RotateAndZoom.app"
-            BlueprintName = "RotateAndZoom"
-            ReferencedContainer = "container:RotateAndZoom.xcodeproj">
+            BuildableName = "ios8-photo-editing.app"
+            BlueprintName = "ios8-photo-editing"
+            ReferencedContainer = "container:ios8-photo-editing.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -94,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D176534A1A406A06004C3CD5"
-            BuildableName = "RotateAndZoom.app"
-            BlueprintName = "RotateAndZoom"
-            ReferencedContainer = "container:RotateAndZoom.xcodeproj">
+            BuildableName = "ios8-photo-editing.app"
+            BlueprintName = "ios8-photo-editing"
+            ReferencedContainer = "container:ios8-photo-editing.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
