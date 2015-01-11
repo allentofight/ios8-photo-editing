@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D17653511A406A06004C3CD5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653501A406A06004C3CD5 /* main.m */; };
-		D17653541A406A06004C3CD5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653531A406A06004C3CD5 /* AppDelegate.m */; };
-		D17653571A406A06004C3CD5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653561A406A06004C3CD5 /* ViewController.m */; };
-		D176535A1A406A06004C3CD5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D17653581A406A06004C3CD5 /* Main.storyboard */; };
-		D176535C1A406A06004C3CD5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D176535B1A406A06004C3CD5 /* Images.xcassets */; };
-		D176535F1A406A06004C3CD5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D176535D1A406A06004C3CD5 /* LaunchScreen.xib */; };
+		D100B3261A6207D3006AA676 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D100B3141A6207D3006AA676 /* AppDelegate.m */; };
+		D100B3271A6207D3006AA676 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D100B3151A6207D3006AA676 /* LaunchScreen.xib */; };
+		D100B3281A6207D3006AA676 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D100B3171A6207D3006AA676 /* Main.storyboard */; };
+		D100B3291A6207D3006AA676 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D100B3191A6207D3006AA676 /* Images.xcassets */; };
+		D100B32A1A6207D3006AA676 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D100B31A1A6207D3006AA676 /* Info.plist */; };
+		D100B32B1A6207D3006AA676 /* HFImageEditorFrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = D100B31D1A6207D3006AA676 /* HFImageEditorFrameView.m */; };
+		D100B32C1A6207D3006AA676 /* HFImageEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100B3201A6207D3006AA676 /* HFImageEditorViewController.m */; };
+		D100B32D1A6207D3006AA676 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D100B3211A6207D3006AA676 /* main.m */; };
+		D100B32E1A6207D3006AA676 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = D100B3231A6207D3006AA676 /* UIView+Addition.m */; };
+		D100B32F1A6207D3006AA676 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100B3251A6207D3006AA676 /* ViewController.m */; };
 		D176536B1A406A06004C3CD5 /* RotateAndZoomTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D176536A1A406A06004C3CD5 /* RotateAndZoomTests.m */; };
-		D17653761A407147004C3CD5 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653751A407147004C3CD5 /* UIView+Addition.m */; };
-		D17653821A416E46004C3CD5 /* HFImageEditorFrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = D176537E1A416E46004C3CD5 /* HFImageEditorFrameView.m */; };
-		D17653831A416E46004C3CD5 /* HFImageEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D17653811A416E46004C3CD5 /* HFImageEditorViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,26 +31,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D100B3131A6207D3006AA676 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D100B3141A6207D3006AA676 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D100B3161A6207D3006AA676 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		D100B3181A6207D3006AA676 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D100B3191A6207D3006AA676 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		D100B31A1A6207D3006AA676 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D100B31C1A6207D3006AA676 /* HFImageEditorFrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFImageEditorFrameView.h; sourceTree = "<group>"; };
+		D100B31D1A6207D3006AA676 /* HFImageEditorFrameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFImageEditorFrameView.m; sourceTree = "<group>"; };
+		D100B31E1A6207D3006AA676 /* HFImageEditorViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HFImageEditorViewController+Private.h"; sourceTree = "<group>"; };
+		D100B31F1A6207D3006AA676 /* HFImageEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFImageEditorViewController.h; sourceTree = "<group>"; };
+		D100B3201A6207D3006AA676 /* HFImageEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFImageEditorViewController.m; sourceTree = "<group>"; };
+		D100B3211A6207D3006AA676 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D100B3221A6207D3006AA676 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
+		D100B3231A6207D3006AA676 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
+		D100B3241A6207D3006AA676 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		D100B3251A6207D3006AA676 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D176534B1A406A06004C3CD5 /* ios8-photo-editing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios8-photo-editing.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D176534F1A406A06004C3CD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D17653501A406A06004C3CD5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D17653521A406A06004C3CD5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		D17653531A406A06004C3CD5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D17653551A406A06004C3CD5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D17653561A406A06004C3CD5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		D17653591A406A06004C3CD5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D176535B1A406A06004C3CD5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		D176535E1A406A06004C3CD5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		D17653641A406A06004C3CD5 /* ios8-photo-editingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios8-photo-editingTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D17653691A406A06004C3CD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D176536A1A406A06004C3CD5 /* RotateAndZoomTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RotateAndZoomTests.m; sourceTree = "<group>"; };
-		D17653741A407147004C3CD5 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
-		D17653751A407147004C3CD5 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
-		D176537D1A416E46004C3CD5 /* HFImageEditorFrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFImageEditorFrameView.h; sourceTree = "<group>"; };
-		D176537E1A416E46004C3CD5 /* HFImageEditorFrameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFImageEditorFrameView.m; sourceTree = "<group>"; };
-		D176537F1A416E46004C3CD5 /* HFImageEditorViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HFImageEditorViewController+Private.h"; sourceTree = "<group>"; };
-		D17653801A416E46004C3CD5 /* HFImageEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFImageEditorViewController.h; sourceTree = "<group>"; };
-		D17653811A416E46004C3CD5 /* HFImageEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFImageEditorViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,10 +71,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D100B3121A6207D3006AA676 /* ios8-photo-editing */ = {
+			isa = PBXGroup;
+			children = (
+				D100B3131A6207D3006AA676 /* AppDelegate.h */,
+				D100B3141A6207D3006AA676 /* AppDelegate.m */,
+				D100B3151A6207D3006AA676 /* LaunchScreen.xib */,
+				D100B3171A6207D3006AA676 /* Main.storyboard */,
+				D100B3191A6207D3006AA676 /* Images.xcassets */,
+				D100B31A1A6207D3006AA676 /* Info.plist */,
+				D100B31B1A6207D3006AA676 /* ios-image-editor */,
+				D100B3211A6207D3006AA676 /* main.m */,
+				D100B3221A6207D3006AA676 /* UIView+Addition.h */,
+				D100B3231A6207D3006AA676 /* UIView+Addition.m */,
+				D100B3241A6207D3006AA676 /* ViewController.h */,
+				D100B3251A6207D3006AA676 /* ViewController.m */,
+			);
+			path = "ios8-photo-editing";
+			sourceTree = "<group>";
+		};
+		D100B31B1A6207D3006AA676 /* ios-image-editor */ = {
+			isa = PBXGroup;
+			children = (
+				D100B31C1A6207D3006AA676 /* HFImageEditorFrameView.h */,
+				D100B31D1A6207D3006AA676 /* HFImageEditorFrameView.m */,
+				D100B31E1A6207D3006AA676 /* HFImageEditorViewController+Private.h */,
+				D100B31F1A6207D3006AA676 /* HFImageEditorViewController.h */,
+				D100B3201A6207D3006AA676 /* HFImageEditorViewController.m */,
+			);
+			path = "ios-image-editor";
+			sourceTree = "<group>";
+		};
 		D17653421A406A06004C3CD5 = {
 			isa = PBXGroup;
 			children = (
-				D176534D1A406A06004C3CD5 /* RotateAndZoom */,
+				D100B3121A6207D3006AA676 /* ios8-photo-editing */,
 				D17653671A406A06004C3CD5 /* RotateAndZoomTests */,
 				D176534C1A406A06004C3CD5 /* Products */,
 			);
@@ -86,33 +118,6 @@
 				D17653641A406A06004C3CD5 /* ios8-photo-editingTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		D176534D1A406A06004C3CD5 /* RotateAndZoom */ = {
-			isa = PBXGroup;
-			children = (
-				D176537C1A416E46004C3CD5 /* ios-image-editor */,
-				D17653521A406A06004C3CD5 /* AppDelegate.h */,
-				D17653531A406A06004C3CD5 /* AppDelegate.m */,
-				D17653551A406A06004C3CD5 /* ViewController.h */,
-				D17653561A406A06004C3CD5 /* ViewController.m */,
-				D17653741A407147004C3CD5 /* UIView+Addition.h */,
-				D17653751A407147004C3CD5 /* UIView+Addition.m */,
-				D17653581A406A06004C3CD5 /* Main.storyboard */,
-				D176535B1A406A06004C3CD5 /* Images.xcassets */,
-				D176535D1A406A06004C3CD5 /* LaunchScreen.xib */,
-				D176534E1A406A06004C3CD5 /* Supporting Files */,
-			);
-			path = RotateAndZoom;
-			sourceTree = "<group>";
-		};
-		D176534E1A406A06004C3CD5 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				D176534F1A406A06004C3CD5 /* Info.plist */,
-				D17653501A406A06004C3CD5 /* main.m */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		D17653671A406A06004C3CD5 /* RotateAndZoomTests */ = {
@@ -130,18 +135,6 @@
 				D17653691A406A06004C3CD5 /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		D176537C1A416E46004C3CD5 /* ios-image-editor */ = {
-			isa = PBXGroup;
-			children = (
-				D176537D1A416E46004C3CD5 /* HFImageEditorFrameView.h */,
-				D176537E1A416E46004C3CD5 /* HFImageEditorFrameView.m */,
-				D176537F1A416E46004C3CD5 /* HFImageEditorViewController+Private.h */,
-				D17653801A416E46004C3CD5 /* HFImageEditorViewController.h */,
-				D17653811A416E46004C3CD5 /* HFImageEditorViewController.m */,
-			);
-			path = "ios-image-editor";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,9 +217,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D176535A1A406A06004C3CD5 /* Main.storyboard in Resources */,
-				D176535F1A406A06004C3CD5 /* LaunchScreen.xib in Resources */,
-				D176535C1A406A06004C3CD5 /* Images.xcassets in Resources */,
+				D100B32A1A6207D3006AA676 /* Info.plist in Resources */,
+				D100B3291A6207D3006AA676 /* Images.xcassets in Resources */,
+				D100B3271A6207D3006AA676 /* LaunchScreen.xib in Resources */,
+				D100B3281A6207D3006AA676 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,12 +238,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D17653761A407147004C3CD5 /* UIView+Addition.m in Sources */,
-				D17653831A416E46004C3CD5 /* HFImageEditorViewController.m in Sources */,
-				D17653571A406A06004C3CD5 /* ViewController.m in Sources */,
-				D17653541A406A06004C3CD5 /* AppDelegate.m in Sources */,
-				D17653511A406A06004C3CD5 /* main.m in Sources */,
-				D17653821A416E46004C3CD5 /* HFImageEditorFrameView.m in Sources */,
+				D100B32F1A6207D3006AA676 /* ViewController.m in Sources */,
+				D100B3261A6207D3006AA676 /* AppDelegate.m in Sources */,
+				D100B32E1A6207D3006AA676 /* UIView+Addition.m in Sources */,
+				D100B32C1A6207D3006AA676 /* HFImageEditorViewController.m in Sources */,
+				D100B32D1A6207D3006AA676 /* main.m in Sources */,
+				D100B32B1A6207D3006AA676 /* HFImageEditorFrameView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,20 +266,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		D17653581A406A06004C3CD5 /* Main.storyboard */ = {
+		D100B3151A6207D3006AA676 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D17653591A406A06004C3CD5 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		D176535D1A406A06004C3CD5 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D176535E1A406A06004C3CD5 /* Base */,
+				D100B3161A6207D3006AA676 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		D100B3171A6207D3006AA676 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D100B3181A6207D3006AA676 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -372,7 +366,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tao LI (D623857R9Z)";
-				INFOPLIST_FILE = RotateAndZoom/Info.plist;
+				INFOPLIST_FILE = "ios8-photo-editing/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "ios8-photo-editing";
@@ -384,7 +378,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = RotateAndZoom/Info.plist;
+				INFOPLIST_FILE = "ios8-photo-editing/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "ios8-photo-editing";
